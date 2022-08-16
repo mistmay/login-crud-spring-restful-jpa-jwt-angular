@@ -8,20 +8,14 @@ import { MaterialModule } from './modules/material/material.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
 import { NavbarComponent } from './core/navbar.component';
-import { ModalComponent } from './core/modal.component';
-import { FormAuthorComponent } from './components/form-author.component';
-import { FormBookComponent } from './components/form-book.component';
-import { FormGenreComponent } from './components/form-genre.component';
+import { ErrorComponent } from './views/error.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
-    ModalComponent,
-    FormAuthorComponent,
-    FormBookComponent,
-    FormGenreComponent
+    ErrorComponent
   ],
   imports: [
     BrowserModule,

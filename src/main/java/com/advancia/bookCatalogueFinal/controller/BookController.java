@@ -1,6 +1,5 @@
 package com.advancia.bookCatalogueFinal.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,11 +28,10 @@ public class BookController {
 	BookRepository bookRepository;
 
 	@PreAuthorize("isAuthenticated()")
-	@GetMapping("/book")
-	public ResponseEntity<List<Book>> getAllBooks() {
+	@GetMapping("/book/{user_id}")
+	public ResponseEntity<List<Book>> getBooksByUserId(@PathVariable("user_id") Integer id) {
 		try {
-			List<Book> books = new ArrayList<Book>();
-			bookRepository.findAll().forEach(books::add);
+			List<Book> books = bookRepository.findAllByUserID(id);
 			return new ResponseEntity<>(books, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

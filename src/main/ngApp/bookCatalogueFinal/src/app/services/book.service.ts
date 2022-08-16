@@ -2,24 +2,29 @@ import { Injectable } from '@angular/core';
 import { ApiService } from '../api/api.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Book } from '../model/book';
+import { LoginService } from './login.service';
+import { User } from '../model/user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookService {
   books: BehaviorSubject<Book[]> = new BehaviorSubject<Book[]>([]);
+  currentUser!: User | undefined;
 
-  constructor(private api: ApiService) { }
+  constructor(private api: ApiService, private loginService: LoginService) { }
 
   getBookListObservable(): Observable<Book[]> {
     return this.books.asObservable();
   }
 
   getAllBooks(): void {
-    this.api.getAllBooks()
-      .subscribe((res: Book[]) => {
-        this.books.next(res);
-      });
+    if (this.currentUser && this.currentUser.id) {
+      this.api.getAllBooksByUserId(this.currentUser.id)
+        .subscribe((res: Book[]) => {
+          this.books.next(res);
+        });
+    }
   }
 
   addBook(book: Book): void {

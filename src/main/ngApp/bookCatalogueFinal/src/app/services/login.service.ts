@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { User } from '../model/user';
 import { Response } from '../model/response';
+import { ModalService } from './modal.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ import { Response } from '../model/response';
 export class LoginService {
   currentUser: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
 
-  constructor(private api: ApiService, private router: Router) { }
+  constructor(private api: ApiService, private router: Router, private modalService: ModalService) { }
 
   getCurrentUser(): Observable<User | undefined> {
     return this.currentUser.asObservable();
@@ -25,11 +26,11 @@ export class LoginService {
           sessionStorage.setItem("token", token);
           this.currentUser.next(res.user);
           this.router.navigate(['panel']);
-          alert("logged in");
+          this.modalService.showSnackBar("logged in");
         } else {
           sessionStorage.removeItem("token");
           this.currentUser.next(undefined);
-          alert(res.message);
+          this.modalService.showSnackBar(res.message);
         }
       });
   }
@@ -44,8 +45,9 @@ export class LoginService {
         token = tokenSplit[1];
       }
       return this.api.isTokenExpired(token).pipe(
-        map((res: boolean) => {
-          return !res;
+        map((res: Response) => {
+          this.currentUser.next(res.user);
+          return !res.status;
         }));
     } else {
       return new BehaviorSubject<boolean>(false);
@@ -56,7 +58,7 @@ export class LoginService {
     sessionStorage.removeItem("token");
     this.currentUser.next(undefined);
     this.router.navigate(['home']);
-    alert('Logged out');
+    this.modalService.showSnackBar('Logged out');
   }
 
 }

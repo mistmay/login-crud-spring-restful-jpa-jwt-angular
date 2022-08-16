@@ -6,7 +6,7 @@ based on database:
 
 use finalbook;
 
-CREATE TABLE user ( user_id int unsigned NOT NULL AUTO_INCREMENT, username varchar(20) DEFAULT NULL, password varchar(20) DEFAULT NULL, email varchar(20) DEFAULT NULL, PRIMARY KEY (user_id) ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+CREATE TABLE user ( user_id int unsigned NOT NULL AUTO_INCREMENT, username varchar(20) DEFAULT NULL, password varchar(150) DEFAULT NULL, email varchar(20) DEFAULT NULL, PRIMARY KEY (user_id) ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 CREATE TABLE author ( author_id int unsigned NOT NULL AUTO_INCREMENT, name varchar(20) DEFAULT NULL, surname varchar(20) DEFAULT NULL, PRIMARY KEY (author_id) ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 

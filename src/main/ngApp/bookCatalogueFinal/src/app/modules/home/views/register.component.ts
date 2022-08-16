@@ -4,10 +4,11 @@ import { Subscription } from 'rxjs';
 import { ApiService } from 'src/app/api/api.service';
 import { Response } from 'src/app/model/response';
 import { Router } from '@angular/router';
+import { ModalService } from 'src/app/services/modal.service';
 
 @Component({
-    selector: 'app-register',
-    template: `
+  selector: 'app-register',
+  template: `
       <form class="d-flex flex-column align-items-center gap-3 w-100 p-5 border border-secondary rounded bg-white" [formGroup]="form" (ngSubmit)="register()">
         <h3 class="fw-bold fs-4">Register</h3>
         <mat-form-field class="w-100" appearance="fill">
@@ -34,43 +35,43 @@ import { Router } from '@angular/router';
         <a class="text-center fw-bold" routerLink="/home/login">Login Page</a>
       </div>
   `,
-    styles: [`
+  styles: [`
     :host(app-register) {
         width: 100%;
     }
     `]
 })
 export class RegisterComponent implements OnInit, OnDestroy {
-    form!: FormGroup;
-    subscriptions: Subscription[] = [];
+  form!: FormGroup;
+  subscriptions: Subscription[] = [];
 
-    constructor(private fb: FormBuilder, private api: ApiService, private router: Router) { }
+  constructor(private fb: FormBuilder, private api: ApiService, private router: Router, private modalService: ModalService) { }
 
-    ngOnInit(): void {
-        this.form = this.fb.group({
-            username: ['', Validators.compose([Validators.required, Validators.minLength(3)])],
-            password: ['', Validators.compose([Validators.required, Validators.minLength(6)])],
-            email: ['', Validators.compose([Validators.required, Validators.email])]
-        });
-    }
-    ngOnDestroy(): void {
-        this.subscriptions.forEach((subscription: Subscription) => {
-            subscription.unsubscribe()
-        });
-        this.form.reset();
-    }
+  ngOnInit(): void {
+    this.form = this.fb.group({
+      username: ['', Validators.compose([Validators.required, Validators.minLength(3)])],
+      password: ['', Validators.compose([Validators.required, Validators.minLength(6)])],
+      email: ['', Validators.compose([Validators.required, Validators.email])]
+    });
+  }
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription: Subscription) => {
+      subscription.unsubscribe()
+    });
+    this.form.reset();
+  }
 
-    register(): void {
-        this.subscriptions.push(this.api.register({ ...this.form.value })
-            .subscribe((res: Response) => {
-                if (res.status) {
-                    alert(res.message);
-                    this.form.reset();
-                    this.router.navigate(['login']);
-                } else {
-                    alert(res.message);
-                }
-            }));
-    }
+  register(): void {
+    this.subscriptions.push(this.api.register({ ...this.form.value })
+      .subscribe((res: Response) => {
+        if (res.status) {
+          this.modalService.showSnackBar(res.message);
+          this.form.reset();
+          this.router.navigate(['home/login']);
+        } else {
+          this.modalService.showSnackBar(res.message);
+        }
+      }));
+  }
 
 }

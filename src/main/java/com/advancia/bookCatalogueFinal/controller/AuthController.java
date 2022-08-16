@@ -1,5 +1,7 @@
 package com.advancia.bookCatalogueFinal.controller;
 
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,9 +79,11 @@ public class AuthController {
 	}
 
 	@GetMapping("/istokenexpired/{token}")
-	public ResponseEntity<Boolean> isTokenExpired(@PathVariable("token") String token) {
+	public ResponseEntity<?> isTokenExpired(@PathVariable("token") String token) {
 		try {
-			return new ResponseEntity<>(jwtUtils.isTokenExpired(token), HttpStatus.OK);
+			String username = jwtUtils.getUserNameFromJwtToken(token);
+			Optional<User> user = userRepository.findByUsername(username);
+			return new ResponseEntity<>(new AuthResponse(token, jwtUtils.isTokenExpired(token), user.get()), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}

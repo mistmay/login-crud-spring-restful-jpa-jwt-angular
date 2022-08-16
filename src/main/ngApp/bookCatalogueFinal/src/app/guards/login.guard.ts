@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { CanLoad, Router } from '@angular/router';
 import { Observable, map } from 'rxjs';
 import { LoginService } from '../services/login.service';
+import { ModalService } from '../services/modal.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginGuard implements CanLoad {
-  constructor(private loginService: LoginService, private router: Router) { }
+  constructor(private loginService: LoginService, private router: Router, private modalService: ModalService) { }
 
   canLoad(): Observable<boolean> {
     return this.loginService.isLoggedIn().pipe(map((res: boolean) => {
@@ -17,7 +18,7 @@ export class LoginGuard implements CanLoad {
         sessionStorage.removeItem("token");
         this.loginService.currentUser.next(undefined);
         this.router.navigate(['home']);
-        alert('You are not logged in');
+        this.modalService.showSnackBar('You are not logged in');
         return false;
       }
     }));

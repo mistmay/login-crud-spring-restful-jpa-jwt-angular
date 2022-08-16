@@ -1,11 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { ModalService } from './services/modal.service';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   template: `
-  <app-modal *ngIf="showModal"></app-modal>
   <app-navbar></app-navbar>
   <main class="bg-secondary py-3">
     <router-outlet></router-outlet>
@@ -17,21 +14,8 @@ import { ModalService } from './services/modal.service';
   }
   `]
 })
-export class AppComponent implements OnInit, OnDestroy {
-  showModal!: boolean;
-  subscription!: Subscription;
+export class AppComponent {
 
-  constructor(private modalService: ModalService) { }
-
-  ngOnInit(): void {
-    this.subscription = this.modalService.getModalObservable()
-      .subscribe((res: boolean) => {
-        this.showModal = res;
-      });
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
+  constructor() { }
 
 }

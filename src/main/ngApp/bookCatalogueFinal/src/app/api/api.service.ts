@@ -25,16 +25,12 @@ export class ApiService {
     return this.http.post<Response>(`${this.urlAuth}/register`, user);
   }
 
-  isTokenExpired(token: string): Observable<boolean> {
-    return this.http.get<boolean>(`${this.urlAuth}/istokenexpired/${token}`);
+  isTokenExpired(token: string): Observable<Response> {
+    return this.http.get<Response>(`${this.urlAuth}/istokenexpired/${token}`);
   }
 
   getAllAuthors(): Observable<Author[]> {
     return this.http.get<Author[]>(`${this.url}/author`);
-  }
-
-  getAllBooks(): Observable<Book[]> {
-    return this.http.get<Book[]>(`${this.url}/book`);
   }
 
   getAllGenres(): Observable<Genre[]> {
@@ -59,6 +55,10 @@ export class ApiService {
 
   removeBook(id: number): Observable<any> {
     return this.http.delete<any>(`${this.url}/book/${id}`);
+  }
+
+  getAllBooksByUserId(id: number): Observable<Book[]> {
+    return this.http.get<Book[]>(`${this.url}/book/${id}`);
   }
 
 }
